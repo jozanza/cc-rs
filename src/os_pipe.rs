@@ -13,7 +13,10 @@ use std::fs::File;
 /// processes won't receive a copy of them unless they're explicitly
 /// passed as stdin/stdout/stderr.
 pub fn pipe() -> std::io::Result<(File, File)> {
-    sys::pipe()
+    #[cfg(not(target_family = "wasm"))]
+    return sys::pipe();
+    #[cfg(target_family = "wasm")]
+    unimplemented!("Only unix and windows support os_pipe!")
 }
 
 #[cfg(unix)]
@@ -23,6 +26,3 @@ mod sys;
 #[cfg(windows)]
 #[path = "os_pipe/windows.rs"]
 mod sys;
-
-#[cfg(all(not(unix), not(windows)))]
-compile_error!("Only unix and windows support os_pipe!");
