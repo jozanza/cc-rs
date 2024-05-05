@@ -24,5 +24,3 @@ mod sys;
 #[path = "os_pipe/windows.rs"]
 mod sys;
 
-#[cfg(all(not(unix), not(windows)))]
-compile_error!("Only unix and windows support os_pipe!");
